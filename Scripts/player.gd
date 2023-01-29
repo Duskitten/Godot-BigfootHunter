@@ -34,7 +34,15 @@ func _physics_process(delta):
 	
 
 	if Input.is_action_pressed("ui_down") || Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_right") || Input.is_action_pressed("ui_left"):
-		footsteps.play("dirt")
+		if multi == 3:
+			
+			footsteps.play("dirt")
+			footsteps.playback_speed = 3
+		
+		if multi == 6:
+			
+			footsteps.play("dirt")
+			footsteps.playback_speed = 6
 	else:
 		footsteps.pause()
 
