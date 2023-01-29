@@ -3,21 +3,23 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
+
+var hand_shake = 0.01;
 var mok = 0
 var oldVel = 0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-@onready var footsteps = $FootSteps
-
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity");
+var photos = [];
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
+	
 var InputStrengthx 
 var InputStrengthz
 var multi = 3
+
 func _physics_process(delta):
-	$Camera3D.rotation.x = lerp_angle($Camera3D.rotation.x,$Node3D.rotation.x,.05)
-	self.rotation.y = lerp_angle(self.rotation.y,$Node3D.rotation.y,0.05)
 	velocity.x = 0
 
 	velocity.z = 0
@@ -26,27 +28,11 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("ui_accept"):
 		multi = 6
-
 	else:
 		multi = 3
 
 	velocity += (-(self.basis.z * InputStrengthz) + -(self.basis.x * InputStrengthx)) * multi
 	
-
-	if Input.is_action_pressed("ui_down") || Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_right") || Input.is_action_pressed("ui_left"):
-		if multi == 3:
-			
-			footsteps.play("dirt")
-			footsteps.playback_speed = 3
-		
-		if multi == 6:
-			
-			footsteps.play("dirt")
-			footsteps.playback_speed = 6
-	else:
-		footsteps.pause()
-
-
 	velocity.y -= gravity
 	if is_on_floor():
 		velocity.y = 0
@@ -55,20 +41,56 @@ func _physics_process(delta):
 	mok += delta
 	
 	if InputStrengthx == 0 && InputStrengthz == 0:
-		
 		mok = 0
 	
-	if Input.is_action_pressed("ui_accept"):
-		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*30)/4),.1)
-	else:
-		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
-
+	#if Input.is_action_pressed("ui_accept"):
+	#	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*30)/4),.1)
+	#else:
+	#	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
+	
+	if(Input.is_action_just_pressed("Hold Camera")):
+		$LerpNode/WorldCamera/AnimationPlayer.play("CameraUp");
+		increase_hand_shake(0.1);
+	elif(Input.is_action_just_released("Hold Camera")):
+		$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
+		
+	if(Input.is_action_pressed("Hold Camera")):
+		if(Input.is_action_just_pressed("Take Photo")):
+			take_photo();
+	
+	decrease_hand_shake(delta);
+	
+	var n = float(Time.get_ticks_msec()*0.001);
+	var shake = Vector2(sin(n*0.1)*+sin(n*0.254)+sin(n*2.1234), cos(n*0.3)*+cos(n*3.46)+sin(n*0.1))*hand_shake;
+	
+	var shake_vector = ($Camera3D.global_transform.basis.x * clamp(shake.x, -0.1, 0.1)) + ($Camera3D.global_transform.basis.y * clamp(shake.y, -0.1, 0.1));
+	$LerpNode.global_transform.origin = $Camera3D.global_transform.origin + shake_vector;
+	var target_basis = $Camera3D.global_transform.basis;
+	target_basis = target_basis.rotated($Camera3D.global_transform.basis.x, shake.x * 2.0); 
+	target_basis = target_basis.rotated($Camera3D.global_transform.basis.y, shake.y * 2.0);
+	$LerpNode.global_transform.basis = $LerpNode.global_transform.basis.slerp(target_basis, 3.0*delta);
 
 var mov = Vector2.ZERO
 func _input(event):
    # Mouse in viewport coordinates.
 	if event is InputEventMouseMotion:
 		mov = event.relative/200
-		$Node3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Node3D.rotation.x -mov.y),-90,90))
-		$Node3D.rotation.y = deg_to_rad(rad_to_deg($Node3D.rotation.y)-mov.x*100)
+		$Camera3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Camera3D.rotation.x -mov.y),-90,90))
+		rotation.y = deg_to_rad(rad_to_deg(rotation.y)-mov.x*100)
+		increase_hand_shake(mov.length()*0.5);
+
+func increase_hand_shake(n):
+	hand_shake = clamp(hand_shake + n, 0.01, 0.3)
+	
+func decrease_hand_shake(delta):
+	if(Input.is_action_pressed("Hold Camera")):
+		hand_shake = lerp(hand_shake, 0.01, 1.0 * delta);
+	else:
+		hand_shake = lerp(hand_shake, 0.01, 0.5 * delta);
+
+func take_photo():
+	#SFX, etc
+	await RenderingServer.frame_post_draw
+	photos.append($LerpNode/WorldCamera/SubViewport.get_texture().get_image());
+
 
