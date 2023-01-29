@@ -1,45 +1,123 @@
-[gd_scene load_steps=7 format=3 uid="uid://5y75g4qj37uy"]
+[gd_scene load_steps=13 format=3 uid="uid://dsu2boy574b27"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_jaybn"]
-[ext_resource type="AudioStream" uid="uid://c716ugdwkhr4g" path="res://SoundEffects/DirtFootstep.ogg" id="2_fjkon"]
+[ext_resource type="PackedScene" uid="uid://b6r6gfwqr0kch" path="res://Models/camera.glb" id="2_7jpx4"]
+[ext_resource type="PackedScene" uid="uid://ls0vk0rh2kr7" path="res://Scenes/Camera.tscn" id="3_6c7uq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jb6d8"]
 
-[sub_resource type="Animation" id="Animation_b1guv"]
-resource_name = "dirt"
-loop_mode = 1
+[sub_resource type="ViewportTexture" id="ViewportTexture_w13wp"]
+viewport_path = NodePath("LerpNode/WorldCamera/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn0id"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_w13wp")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3d4v7"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_rn0id")
+size = Vector2(1.55, 0.915)
+
+[sub_resource type="GDScript" id="GDScript_2jbqd"]
+script/source = "extends Camera3D
+
+@export var node_to_follow_path : NodePath;
+var node_to_follow : Node3D;
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	node_to_follow = get_node(node_to_follow_path);
+
+func _process(delta):
+	global_transform = node_to_follow.global_transform;
+"
+
+[sub_resource type="Animation" id="Animation_u0cvd"]
+resource_name = "CameraDown"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("DirtFootstep:playing")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.25, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.5), Vector3(0.423, -0.253, -0.499)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.25, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.515521, -1.31835, 0.36785)]
 }
 
-[sub_resource type="Animation" id="Animation_mh360"]
+[sub_resource type="Animation" id="Animation_m5jaa"]
+resource_name = "CameraUp"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.25, 0.25),
+"update": 0,
+"values": [Vector3(0.423, -0.253, -0.499), Vector3(0, 0, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.25, 0.25),
+"update": 0,
+"values": [Vector3(-0.515521, -1.31835, 0.36785), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_jwv60"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("DirtFootstep:playing")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [Vector3(0, 0.5, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ixmci"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0sph7"]
 _data = {
-"RESET": SubResource("Animation_mh360"),
-"dirt": SubResource("Animation_b1guv")
+"CameraDown": SubResource("Animation_u0cvd"),
+"CameraUp": SubResource("Animation_m5jaa"),
+"RESET": SubResource("Animation_jwv60")
 }
 
 [node name="Player" type="CharacterBody3D"]
@@ -52,14 +130,40 @@ shape = SubResource("CapsuleShape3D_jb6d8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="LerpNode" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+top_level = true
 
-[node name="DirtFootstep" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_fjkon")
-volume_db = -34.739
+[node name="WorldCamera" type="Node3D" parent="LerpNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.5)
 
-[node name="FootSteps" type="AnimationPlayer" parent="."]
-playback_speed = 3.0
+[node name="camera" parent="LerpNode/WorldCamera" instance=ExtResource("2_7jpx4")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+
+[node name="Camera" parent="LerpNode/WorldCamera/camera" index="0"]
+layers = 512
+
+[node name="ViewportDisplay" type="MeshInstance3D" parent="LerpNode/WorldCamera/camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0732124)
+layers = 512
+mesh = SubResource("QuadMesh_3d4v7")
+skeleton = NodePath("../..")
+
+[node name="SubViewport" type="SubViewport" parent="LerpNode/WorldCamera"]
+canvas_cull_mask = 4294966783
+size = Vector2i(155, 92)
+
+[node name="CameraFx" parent="LerpNode/WorldCamera/SubViewport" instance=ExtResource("3_6c7uq")]
+
+[node name="Camera3D" type="Camera3D" parent="LerpNode/WorldCamera/SubViewport"]
+top_level = true
+cull_mask = 1048063
+script = SubResource("GDScript_2jbqd")
+node_to_follow_path = NodePath("../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LerpNode/WorldCamera"]
 libraries = {
-"": SubResource("AnimationLibrary_ixmci")
+"": SubResource("AnimationLibrary_0sph7")
 }
+
+[editable path="LerpNode/WorldCamera/camera"]

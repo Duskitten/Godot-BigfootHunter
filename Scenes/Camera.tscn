@@ -1,7 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://ls0vk0rh2kr7"]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Texture2D" uid="uid://clw0lffu3xubk" path="res://Textures/bigfootmeme_2.png" id="1_8t0gn"]
-[ext_resource type="Script" path="res://cam.gd" id="2_vv82o"]
+[ext_resource type="Script" path="res://Scripts/cam.gd" id="2_vv82o"]
 [ext_resource type="FontFile" uid="uid://cftwm5nbm65lw" path="res://Fonts/8bitoperator_jve.ttf" id="3_n6sik"]
 [ext_resource type="Script" path="res://Label.gd" id="4_j2tcm"]
 [ext_resource type="Shader" path="res://main_game2.gdshader" id="5_owp87"]
@@ -15,19 +15,24 @@ shader_parameter/scan_line_count = 1180.02
 shader = ExtResource("6_frqah")
 shader_parameter/scan_line_count = 1180.02
 
-[node name="TextureRect" type="TextureRect"]
-visible = false
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CameraFx" type="TextureRect"]
+layout_direction = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_8t0gn")
 script = ExtResource("2_vv82o")
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 6.0
-offset_top = 218.0
-offset_right = 86.0
-offset_bottom = 244.0
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -26.0
+offset_right = 80.0
+grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_n6sik")
 theme_override_font_sizes/font_size = 16
 text = "00:00:00"
@@ -35,12 +40,18 @@ script = ExtResource("4_j2tcm")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_45xch")
-layout_mode = 0
-offset_right = 320.0
-offset_bottom = 240.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_hy88o")
-layout_mode = 0
-offset_right = 320.0
-offset_bottom = 240.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
