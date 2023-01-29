@@ -7,6 +7,8 @@ var mok = 0
 var oldVel = 0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+@onready var footsteps = $FootSteps
+
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -24,11 +26,14 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("ui_accept"):
 		multi = 6
+
 	else:
 		multi = 3
 
 	velocity += (-(self.basis.z * InputStrengthz) + -(self.basis.x * InputStrengthx)) * multi
 	
+
+
 	velocity.y -= gravity
 	if is_on_floor():
 		velocity.y = 0
@@ -37,6 +42,7 @@ func _physics_process(delta):
 	mok += delta
 	
 	if InputStrengthx == 0 && InputStrengthz == 0:
+		
 		mok = 0
 	
 	if Input.is_action_pressed("ui_accept"):
@@ -52,3 +58,4 @@ func _input(event):
 		mov = event.relative/200
 		$Node3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Node3D.rotation.x -mov.y),-90,90))
 		$Node3D.rotation.y = deg_to_rad(rad_to_deg($Node3D.rotation.y)-mov.x*100)
+

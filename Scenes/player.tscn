@@ -1,8 +1,46 @@
-[gd_scene load_steps=3 format=3 uid="uid://5y75g4qj37uy"]
+[gd_scene load_steps=7 format=3 uid="uid://5y75g4qj37uy"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_jaybn"]
+[ext_resource type="AudioStream" uid="uid://c716ugdwkhr4g" path="res://SoundEffects/DirtFootstep.ogg" id="2_fjkon"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jb6d8"]
+
+[sub_resource type="Animation" id="Animation_b1guv"]
+resource_name = "dirt"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DirtFootstep:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_mh360"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DirtFootstep:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ixmci"]
+_data = {
+"RESET": SubResource("Animation_mh360"),
+"dirt": SubResource("Animation_b1guv")
+}
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_jaybn")
@@ -15,3 +53,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 
 [node name="Node3D" type="Node3D" parent="."]
+
+[node name="DirtFootstep" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_fjkon")
+volume_db = -6.095
+
+[node name="FootSteps" type="AnimationPlayer" parent="."]
+playback_speed = 3.0
+libraries = {
+"": SubResource("AnimationLibrary_ixmci")
+}
