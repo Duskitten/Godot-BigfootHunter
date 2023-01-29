@@ -33,6 +33,11 @@ func _physics_process(delta):
 	velocity += (-(self.basis.z * InputStrengthz) + -(self.basis.x * InputStrengthx)) * multi
 	
 
+	if Input.is_action_pressed("ui_down") || Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_right") || Input.is_action_pressed("ui_left"):
+		footsteps.play("dirt")
+	else:
+		footsteps.pause()
+
 
 	velocity.y -= gravity
 	if is_on_floor():
