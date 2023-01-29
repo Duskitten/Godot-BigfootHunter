@@ -14,6 +14,8 @@ var InputStrengthx
 var InputStrengthz
 var multi = 3
 func _physics_process(delta):
+	$Camera3D.rotation.x = lerp_angle($Camera3D.rotation.x,$Node3D.rotation.x,.05)
+	self.rotation.y = lerp_angle(self.rotation.y,$Node3D.rotation.y,0.05)
 	velocity.x = 0
 
 	velocity.z = 0
@@ -24,7 +26,7 @@ func _physics_process(delta):
 		multi = 6
 	else:
 		multi = 3
-	
+
 	velocity += (-(self.basis.z * InputStrengthz) + -(self.basis.x * InputStrengthx)) * multi
 	
 	velocity.y -= gravity
@@ -43,10 +45,10 @@ func _physics_process(delta):
 		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
 
 
-var mov
+var mov = Vector2.ZERO
 func _input(event):
    # Mouse in viewport coordinates.
 	if event is InputEventMouseMotion:
 		mov = event.relative/200
-		$Camera3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Camera3D.rotation.x-mov.y),-90,90))
-		self.rotation.y = deg_to_rad(rad_to_deg(self.rotation.y)-mov.x*100)
+		$Node3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Node3D.rotation.x -mov.y),-90,90))
+		$Node3D.rotation.y = deg_to_rad(rad_to_deg($Node3D.rotation.y)-mov.x*100)
