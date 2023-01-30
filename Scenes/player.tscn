@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://dsu2boy574b27"]
+[gd_scene load_steps=14 format=3 uid="uid://dsu2boy574b27"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_jaybn"]
 [ext_resource type="PackedScene" uid="uid://b6r6gfwqr0kch" path="res://Models/camera.glb" id="2_7jpx4"]
 [ext_resource type="PackedScene" uid="uid://c1dctjx0wppk" path="res://Scenes/Camera.tscn" id="3_6c7uq"]
+[ext_resource type="AudioStream" uid="uid://c716ugdwkhr4g" path="res://SoundEffects/DirtFootstep.ogg" id="4_4ce2s"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jb6d8"]
 
@@ -168,5 +169,10 @@ node_to_follow_path = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_0sph7")
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_4ce2s")
+volume_db = -30.0
+pitch_scale = 1.1
 
 [editable path="LerpNode/WorldCamera/camera"]

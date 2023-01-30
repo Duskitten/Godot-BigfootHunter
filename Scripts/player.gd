@@ -10,7 +10,7 @@ var oldVel = 0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity");
 var photos = [];
-
+var doubmulti = 20
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
@@ -43,10 +43,21 @@ func _physics_process(delta):
 	if InputStrengthx == 0 && InputStrengthz == 0:
 		mok = 0
 	
+	print(sin(mok*30)/4)
+	
+	
 	if Input.is_action_pressed("ui_accept"):
-		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*30)/4),.1)
+		doubmulti = 30
+		if (sin(mok*doubmulti)/multi) < -.1:
+			$AudioStreamPlayer.play()
 	else:
-		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
+		doubmulti = 20
+		if (sin(mok*doubmulti)/multi) < -.24:
+			$AudioStreamPlayer.play()
+	
+	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*doubmulti)/multi),.1)
+		
+
 	
 	if(Input.is_action_pressed("Hold Camera")):
 		$LerpNode/WorldCamera.position = lerp($LerpNode/WorldCamera.position,Vector3(0,-0,-0.5),.05)
