@@ -10,7 +10,7 @@ var oldVel = 0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity");
 var photos = [];
-
+var doubmulti = 20
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
@@ -43,22 +43,29 @@ func _physics_process(delta):
 	if InputStrengthx == 0 && InputStrengthz == 0:
 		mok = 0
 	
-	#if Input.is_action_pressed("ui_accept"):
-	#	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*30)/4),.1)
-	#else:
-	#	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
+	print(sin(mok*30)/4)
 	
-	if(Input.is_action_just_pressed("Hold Camera")):
-		$LerpNode/WorldCamera/AnimationPlayer.play("CameraUp");
-		increase_hand_shake(0.1);
-	elif(Input.is_action_just_released("Hold Camera")):
-		$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
+	
+	if Input.is_action_pressed("ui_accept"):
+		doubmulti = 30
+		if (sin(mok*doubmulti)/multi) < -.1:
+			$AudioStreamPlayer.play()
+	else:
+		doubmulti = 20
+		if (sin(mok*doubmulti)/multi) < -.24:
+			$AudioStreamPlayer.play()
+	
+	$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*doubmulti)/multi),.1)
 		
-	if(Input.is_action_pressed("Hold Camera")):
-		if(Input.is_action_just_pressed("Take Photo")):
-			take_photo();
+
 	
-	decrease_hand_shake(delta);
+	if(Input.is_action_pressed("Hold Camera")):
+		$LerpNode/WorldCamera.position = lerp($LerpNode/WorldCamera.position,Vector3(0,-0,-0.5),.05)
+		$LerpNode/WorldCamera.rotation = lerp($LerpNode/WorldCamera.rotation,Vector3(deg_to_rad(0),0,0),.05)
+	elif!(Input.is_action_pressed("Hold Camera")):
+		$LerpNode/WorldCamera.position = lerp($LerpNode/WorldCamera.position,Vector3(0.423,-0.253,-0.499),.05)
+		$LerpNode/WorldCamera.rotation = lerp($LerpNode/WorldCamera.rotation,Vector3(deg_to_rad(-29.5),deg_to_rad(-75.5),deg_to_rad(21.1)),.05)
+	
 	
 	var n = float(Time.get_ticks_msec()*0.001);
 	var shake = Vector2(sin(n*0.1)*+sin(n*0.254)+sin(n*2.1234), cos(n*0.3)*+cos(n*3.46)+sin(n*0.1))*hand_shake;
@@ -69,7 +76,7 @@ func _physics_process(delta):
 	target_basis = target_basis.rotated($Camera3D.global_transform.basis.x, shake.x * 2.0); 
 	target_basis = target_basis.rotated($Camera3D.global_transform.basis.y, shake.y * 2.0);
 	$LerpNode.global_transform.basis = $LerpNode.global_transform.basis.slerp(target_basis, 3.0*delta);
-
+	
 var mov = Vector2.ZERO
 func _input(event):
    # Mouse in viewport coordinates.
@@ -77,16 +84,8 @@ func _input(event):
 		mov = event.relative/200
 		$Camera3D.rotation.x = deg_to_rad(clampf(rad_to_deg($Camera3D.rotation.x -mov.y),-90,90))
 		rotation.y = deg_to_rad(rad_to_deg(rotation.y)-mov.x*100)
-		increase_hand_shake(mov.length()*0.5);
 
-func increase_hand_shake(n):
-	hand_shake = clamp(hand_shake + n, 0.01, 0.3)
-	
-func decrease_hand_shake(delta):
-	if(Input.is_action_pressed("Hold Camera")):
-		hand_shake = lerp(hand_shake, 0.01, 1.0 * delta);
-	else:
-		hand_shake = lerp(hand_shake, 0.01, 0.5 * delta);
+
 
 func take_photo():
 	#SFX, etc

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://c1dctjx0wppk"]
 
 [ext_resource type="Texture2D" uid="uid://clw0lffu3xubk" path="res://Textures/bigfootmeme_2.png" id="1_8t0gn"]
 [ext_resource type="Script" path="res://Scripts/cam.gd" id="2_vv82o"]
@@ -30,11 +30,13 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -26.0
-offset_right = 80.0
+offset_left = 6.0
+offset_top = -32.0
+offset_right = 102.0
+offset_bottom = 3.0
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_n6sik")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 32
 text = "00:00:00"
 script = ExtResource("4_j2tcm")
 

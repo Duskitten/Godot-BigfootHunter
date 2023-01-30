@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://dsu2boy574b27"]
+[gd_scene load_steps=14 format=3 uid="uid://dsu2boy574b27"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_jaybn"]
 [ext_resource type="PackedScene" uid="uid://b6r6gfwqr0kch" path="res://Models/camera.glb" id="2_7jpx4"]
-[ext_resource type="PackedScene" uid="uid://ls0vk0rh2kr7" path="res://Scenes/Camera.tscn" id="3_6c7uq"]
+[ext_resource type="PackedScene" uid="uid://c1dctjx0wppk" path="res://Scenes/Camera.tscn" id="3_6c7uq"]
+[ext_resource type="AudioStream" uid="uid://c716ugdwkhr4g" path="res://SoundEffects/DirtFootstep.ogg" id="4_4ce2s"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jb6d8"]
 
@@ -11,6 +12,7 @@ viewport_path = NodePath("LerpNode/WorldCamera/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn0id"]
 resource_local_to_scene = true
+shading_mode = 0
 albedo_texture = SubResource("ViewportTexture_w13wp")
 
 [sub_resource type="QuadMesh" id="QuadMesh_3d4v7"]
@@ -151,13 +153,15 @@ skeleton = NodePath("../..")
 
 [node name="SubViewport" type="SubViewport" parent="LerpNode/WorldCamera"]
 canvas_cull_mask = 4294966783
-size = Vector2i(155, 92)
+size = Vector2i(320, 240)
 
 [node name="CameraFx" parent="LerpNode/WorldCamera/SubViewport" instance=ExtResource("3_6c7uq")]
 
 [node name="Camera3D" type="Camera3D" parent="LerpNode/WorldCamera/SubViewport"]
 top_level = true
 cull_mask = 1048063
+current = true
+fov = 78.2
 script = SubResource("GDScript_2jbqd")
 node_to_follow_path = NodePath("../..")
 
@@ -165,5 +169,10 @@ node_to_follow_path = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_0sph7")
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_4ce2s")
+volume_db = -30.0
+pitch_scale = 1.1
 
 [editable path="LerpNode/WorldCamera/camera"]
