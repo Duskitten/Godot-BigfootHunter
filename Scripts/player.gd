@@ -48,11 +48,12 @@ func _physics_process(delta):
 	else:
 		$Camera3D.position.y = lerp($Camera3D.position.y ,.5 + (sin(mok*20)/6),.1)
 	
-	if(Input.is_action_just_pressed("Hold Camera")):
-		$LerpNode/WorldCamera/AnimationPlayer.play("CameraUp");
-
-	elif(Input.is_action_just_released("Hold Camera")):
-		$LerpNode/WorldCamera/AnimationPlayer.play("CameraDown");
+	if(Input.is_action_pressed("Hold Camera")):
+		$LerpNode/WorldCamera.position = lerp($LerpNode/WorldCamera.position,Vector3(0,-0,-0.5),.05)
+		$LerpNode/WorldCamera.rotation = lerp($LerpNode/WorldCamera.rotation,Vector3(deg_to_rad(0),0,0),.05)
+	elif!(Input.is_action_pressed("Hold Camera")):
+		$LerpNode/WorldCamera.position = lerp($LerpNode/WorldCamera.position,Vector3(0.423,-0.253,-0.499),.05)
+		$LerpNode/WorldCamera.rotation = lerp($LerpNode/WorldCamera.rotation,Vector3(deg_to_rad(-29.5),deg_to_rad(-75.5),deg_to_rad(21.1)),.05)
 	
 	
 	var n = float(Time.get_ticks_msec()*0.001);

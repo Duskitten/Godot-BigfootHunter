@@ -5,10 +5,10 @@ extends TextureRect
 func _ready():
 	pass # Replace with function body.
 
-var defaultZoom = 75
-var CamZoomMax = 75
-var CamZoomMin = 35
-var CamZoomCurrent = 75
+var defaultZoom = 45
+var CamZoomMax = 45
+var CamZoomMin = 1
+var CamZoomCurrent = 45
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):	
